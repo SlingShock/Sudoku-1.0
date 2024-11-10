@@ -1,0 +1,68 @@
+<!-- public/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sudoku Generator</title>
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+
+        td {
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            border: 1px solid black;
+        }
+
+        input {
+            width: 100%;
+            height: 100%;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Sudoku Puzzle</h1>
+    <table id="sudoku-grid"></table>
+    <button onclick="generateSudoku()">Generate New Puzzle</button>
+
+    <script>
+        async function generateSudoku() {
+            const response = await fetch('/generate');
+            const { puzzle } = await response.json();
+
+            const table = document.getElementById('sudoku-grid');
+            table.innerHTML = '';  // Clear previous grid
+
+            puzzle.forEach((value, index) => {
+                const row = Math.floor(index / 9);
+                const col = index % 9;
+
+                if (col === 0) {
+                    const tr = document.createElement('tr');
+                    table.appendChild(tr);
+                }
+
+                const td = document.createElement('td');
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.maxLength = 1;
+                if (value !== null) {
+                    input.value = value + 1;  // Adjust from 0-based to 1-based
+                    input.disabled = true;
+                }
+                td.appendChild(input);
+                table.lastElementChild.appendChild(td);
+            });
+        }
+
+        window.onload = generateSudoku;  // Load puzzle on page load
+    </script>
+</body>
+
+</html>
