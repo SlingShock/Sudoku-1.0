@@ -88,7 +88,9 @@
         }
 
         function printCheck() {
-            console.log(checkSudoku());
+            let solved = checkSudoku();
+            console.log(solved);
+            alert(solved? "puzzle is completed! congrats!" : "puzzle is not solved!")
         }
         window.onload = generateSudoku;  // Load puzzle on page load
     </script>
