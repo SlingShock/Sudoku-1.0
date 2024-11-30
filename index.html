@@ -1,0 +1,97 @@
+<!-- public/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sudoku Generator</title>
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+
+        td {
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            border: 1px solid black;
+        }
+
+        input {
+            width: 100%;
+            height: 100%;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Sudoku Puzzle</h1>
+    <table id="sudoku-grid"></table>
+    <button onclick="generateSudoku()">Generate New Puzzle</button>
+    <button onclick="printCheck()">Check Puzzle</button>
+
+    <script>
+        
+        let puzzle;
+        let solution;
+        
+        async function generateSudoku() {
+            const response = await fetch('/generate');
+            const puz = await response.json();
+
+            console.table(puz);
+
+            puzzle = puz.puzzle;
+            solution = puz.solution;
+            //solution = sol;
+
+            const table = document.getElementById('sudoku-grid');
+            table.innerHTML = '';  // Clear previous grid
+
+            puzzle.forEach((value, index) => {
+                const row = Math.floor(index / 9);
+                const col = index % 9;
+
+                if (col === 0) {
+                    const tr = document.createElement('tr');
+                    tr.classList.add(row+1);
+                    table.appendChild(tr);
+                }
+
+                const td = document.createElement('td');
+                td.classList.add(col+1);
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.maxLength = 1;
+                input.addEventListener('input', (event) => {
+                    let square = ((row)*9) + (col)
+                    puzzle[square] = parseInt(event.data) - 1;
+                    //console.log("square " + square + " set to " + event.data);
+                });
+
+                if (value !== null) {
+                    input.value = value + 1;  // Adjust from 0-based to 1-based
+                    input.disabled = true;
+                }
+                td.appendChild(input);
+                table.lastElementChild.appendChild(td);
+            });
+        }
+
+        function checkSudoku() {
+            for(let i = 0; i < puzzle.length; i++) {
+                if(puzzle[i] != solution[i]) return false;
+            }
+            return true;
+        }
+
+        function printCheck() {
+            console.log(checkSudoku());
+        }
+        window.onload = generateSudoku;  // Load puzzle on page load
+    </script>
+</body>
+
+</html>

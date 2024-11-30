@@ -10,8 +10,13 @@ function generateSudoku() {
     return { puzzle, solution };
 }
 
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + "/index.html");
+})
+
 app.get('/generate', (req, res) => {
     const { puzzle, solution } = generateSudoku();
+    console.table(solution);
     res.json({ puzzle, solution });
 });
 

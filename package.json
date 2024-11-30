@@ -1,0 +1,16 @@
+{
+  "name": "sudoku-1.0",
+  "version": "1.0.0",
+  "main": "Sudoku.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "express": "^4.21.1",
+    "sudoku": "^0.0.3",
+    "sudoku-1.0": "file:"
+  }
+}
